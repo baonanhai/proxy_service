@@ -1,3 +1,3 @@
 #!/usr/bin/sh
 
-python xici_spider.py
+python spider_main.py

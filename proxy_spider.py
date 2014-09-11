@@ -34,8 +34,9 @@ class ProxySpider(threading.Thread):
 		print page_count_time, 'get page count:', page_count
 		default_ip = get_default_ip()
 		if page_count != 0:
+			last_proxy = None
 			for i in xrange(1, page_count):
-				page = get_html(URL_HEADER + str(i) + URL_END)
+				page = get_html(URL_HEADER + str(i) + URL_END, last_proxy)
 				proxy_list = filte(page)
 				for proxy in proxy_list:
 					if proxy.anonymous_type == '高匿':
@@ -46,6 +47,7 @@ class ProxySpider(threading.Thread):
 							proxy.created_time = str(datetime.now()).split('.')[0]
 							proxy.is_in_china = 2
 							proxy_manager.add_proxy(proxy, spider_time)
+							last_proxy = proxy
 						else:
 							pass
 							#print spider_time, proxy.ip, ':', proxy.port, " is not usefull."

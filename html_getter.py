@@ -13,9 +13,10 @@ user_agents = [
     'Lynx/2.8.5rel.1 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/1.2.9'
         ]
         
-def get_html(url, proxyInfo = None):
-	if proxyInfo:
-		proxy = urllib2.ProxyHandler({'http': proxyInfo})
+def get_html(url, proxy_info = None):
+	if proxy_info:
+		proxy_content = proxy_info.ip + ':' + str(proxy_info.port)
+		proxy = urllib2.ProxyHandler({proxy_info.proxy_type : proxy_content})
 		opener = urllib2.build_opener(proxy)
 		urllib2.install_opener(opener)
 	req = urllib2.Request(url)

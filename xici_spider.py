@@ -32,6 +32,7 @@ class XiciSpider(threading.Thread):
 		spider_start_time = str(datetime.now()).split('.')[0]
 		print spider_start_time, 'time to spider start!'
 		proxy_manager = ProxyManager()
+		last_proxy = None
 		for url in self.urls:
 			page = get_html(url)
 			page_count = self.get_page_count(page)
@@ -52,6 +53,7 @@ class XiciSpider(threading.Thread):
 							if url.endswith(CHINA_ANONYMOUS) or url.endswith(CHINA_NORMAL):
 								proxy.is_in_china = 1
 							proxy_manager.add_proxy(proxy, spider_time)
+							last_proxy = proxy
 						else:
 							pass
 							#print spider_time, proxy.ip, ':', proxy.port, " is not usefull."

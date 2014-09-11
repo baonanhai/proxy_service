@@ -45,11 +45,9 @@ class ProxyManager(object):
 			anonymous = '高匿'
 
 		country_flag = 0
-		if is_china:
-			country_flag = 1
 
 		proxy_query = self.db.query(Proxy).filter(and_(Proxy.anonymous_type == anonymous, \
-		  Proxy.is_in_china == country_flag, Proxy.proxy_type != 'socks4/5')\
+		  Proxy.is_in_china != country_flag, Proxy.proxy_type != 'socks4/5')\
 		 ).order_by(Proxy.check_time).limit(1000) 
 		proxys = proxy_query.all()
 		proxy = proxys[random.randint(0, len(proxys) - 1)]
