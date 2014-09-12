@@ -9,6 +9,8 @@ from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy import and_
+from sqlalchemy.exc import DisconnectionError
+from sqlalchemy import desc
 
 #app import
 from models import Proxy
@@ -18,7 +20,7 @@ import usefull_check
 class ProxyManager(object):
 	def __init__(self):
 		super(ProxyManager, self).__init__()
-		engine = create_engine(DB_PATH, convert_unicode=True, pool_recycle=7200)
+		engine = create_engine(DB_PATH, convert_unicode=True, pool_recycle=5)
 		engine.connect()
 		self.db = scoped_session(sessionmaker(bind=engine))
 
@@ -48,10 +50,13 @@ class ProxyManager(object):
 
 		proxy_query = self.db.query(Proxy).filter(and_(Proxy.anonymous_type == anonymous, \
 		  Proxy.is_in_china != country_flag, Proxy.proxy_type != 'socks4/5')\
-		 ).order_by(Proxy.check_time).limit(1000) 
-		proxys = proxy_query.all()
-		proxy = proxys[random.randint(0, len(proxys) - 1)]
-		return proxy
+		 ).order_by(desc(Proxy.check_time)).limit(10) 
+
+		proxys = []
+		for proxy in proxy_query:
+			print proxy.check_time
+			proxys.append(proxy)
+		return proxys
 
 	def check_all_proxy_usefull(self):
 		check_start_time = str(datetime.now()).split('.')[0]
@@ -79,6 +84,7 @@ class ProxyManager(object):
 				print proxy.ip, ':', proxy.port, ' is not anonymous and delete it!'
 			else:
 				print proxy.ip, ':', proxy.port, ' is anonymous!'
+
 
 if __name__ == '__main__':
 	proxy_manager = ProxyManager()

@@ -26,7 +26,7 @@ import proxy_manager
 
 # Options
 define("port", default=8012, help="run on the given port", type=int)
-define("debug", default=False, type=bool)
+define("debug", default=True, type=bool)
 
 class Application(tornado.web.Application):
 	def __init__(self):
@@ -47,8 +47,8 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class ProxyHandler(BaseHandler):
 	def get(self):
-		proxy = self.application.p_manager.get_proxy()
-		self.write(str(proxy))
+		proxys = self.application.p_manager.get_proxy()
+		self.write(str(proxys))
 		self.flush()
 
 	def post(self):
